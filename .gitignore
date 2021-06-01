@@ -1,0 +1,13 @@
+# Environments
+spotify-env/
+.cache
+
+# Editors
+.vscode/
+
+# Windows
+Thumbs.db
+
+# Spotify key
+ETL/secrets.py
+
