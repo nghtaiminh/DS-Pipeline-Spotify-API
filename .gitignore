@@ -1,6 +1,7 @@
 # Environments
 spotify-env/
 .cache
+__pycache__
 
 # Editors
 .vscode/
@@ -8,6 +9,10 @@ spotify-env/
 # Windows
 Thumbs.db
 
-# Spotify key
+# Spotify key / Database config
 ETL/secrets.py
+
+# Notebook
+*.ipynb_checkpoints
+*.ipynb
 

@@ -19,10 +19,10 @@ def access_api():
     return sp
 
 
-def get_recently_played_tracks() -> pd.DataFrame:
+def get_recently_played_songs():
     sp = access_api()
     today = datetime.datetime.now()
-    ndays_ago = today - datetime.timedelta(days=7)  # 1 week
+    ndays_ago = today - datetime.timedelta(days=5)  
     time = int(ndays_ago.timestamp()) * 1000
     songs = sp.current_user_recently_played(after=time)
     song_dict = {
@@ -31,21 +31,18 @@ def get_recently_played_tracks() -> pd.DataFrame:
         "artist_id": [],
         "artist_name": [],
         "played_at": [],
-        "timestamps": []
     }
 
     for song in songs['items']:
         song_dict['song_id'].append(song["track"]['id'])
         song_dict['song_name'].append(song["track"]["name"])
-        song_dict['artist_id'].append(
-            song["track"]["album"]["artists"][0]["id"])
-        song_dict['artist_name'].append(
-            song["track"]["album"]["artists"][0]["name"])
+        song_dict['artist_id'].append(song["track"]["album"]["artists"][0]["id"])
+        song_dict['artist_name'].append(song["track"]["album"]["artists"][0]["name"])
         song_dict['played_at'].append(song["played_at"])
-        song_dict["timestamps"].append(song["played_at"][0:10])
 
     song_df = pd.DataFrame(song_dict)
     return song_df
+
 
 
 def get_song_features(ids: str) -> pd.DataFrame:
@@ -99,37 +96,33 @@ def get_artist_genres(id):
     return pd.DataFrame(genres_dic)
 
 
-def get_artist(id):
+def get_artist(ids):
     sp = access_api()
-    artist_json = sp.artist(artist_id=id)
-    artist_df = pd.DataFrame([{'artist_id': artist_json['id'],
-                               'name': artist_json['name'],
-                               'followers':artist_json['followers']['total'],
-                               'popularity':artist_json['popularity'],
-                               'genres':artist_json['genres']}])
+    artist_json = sp.artist(ids)
 
-    return artist_df
+    return artist_json
 
 
-def get_songs(id):
+def get_songs(ids):
     sp = access_api()
-    songs_json = sp.track(track_id=id)
+    songs_json = sp.tracks(tracks=ids, market=None) # maximum 50 IDs
     songs_dict = {
         'song_id': [],
-        'name' : [],
+        'song_name' : [],
         'artist_id': [],
         'album_id': [],
-        'popularity': [],
         'duration_ms': [],
+        'popularity': [],
         'external_urls': []
     }
-
-    songs_dict['song_id'].append(songs_json['id'])
-    songs_dict['name'].append(songs_json['name'])
-    songs_dict['artist_id'].append(songs_json['artists'][0]['id'])
-    songs_dict['album_id'].append(songs_json['album']['id'])
-    songs_dict['popularity'].append(songs_json['popularity'])
-    songs_dict['duration_ms'].append(songs_json['duration_ms'])
-    songs_dict['external_urls'].append(songs_json['external_urls']['spotify'])
+    for song in songs_json['tracks']:
+        songs_dict['song_id'].append(song['id'])
+        songs_dict['song_name'].append(song['name'])
+        songs_dict['artist_id'].append(song['artists'][0]['id'])
+        songs_dict['album_id'].append(song['album']['id'])
+        songs_dict['popularity'].append(song['popularity'])
+        songs_dict['duration_ms'].append(song['duration_ms'])
+        songs_dict['external_urls'].append(song['external_urls']['spotify'])
 
     return pd.DataFrame(songs_dict)
+
