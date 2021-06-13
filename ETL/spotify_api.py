@@ -1,5 +1,8 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+
+from typing import List 
+
 import pandas as pd
 import datetime
 
@@ -10,16 +13,21 @@ REDIRECT_URL = "http://localhost:8888/callback"
 
 
 def access_api():
+    """ Create a Client Authorization flow and get the token """
+    
     sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
         client_id=SPOTIFY_CLIENT_ID,
         client_secret=SPOTIFY_CLIENT_SECRET,
         redirect_uri=REDIRECT_URL,
         scope="user-read-recently-played"
     ))
+    
     return sp
 
 
 def get_recently_played_songs():
+    """Get user's recently-played-tracks data and structure the data for PlayedSong Table"""
+
     sp = access_api()
     today = datetime.datetime.now()
     ndays_ago = today - datetime.timedelta(days=5)  
@@ -45,10 +53,11 @@ def get_recently_played_songs():
 
 
 
-def get_song_features(ids: str) -> pd.DataFrame:
-    """
-    :param ids:
-    :return: 
+def get_audio_features(ids: List[str]) -> pd.DataFrame:
+    """Get audio features data and structure AudioFeature Table
+    
+    Args:
+        ids: input list of song ID
     """
     sp = access_api()
     audio_features = sp.audio_features(tracks=ids)
@@ -64,6 +73,7 @@ def get_song_features(ids: str) -> pd.DataFrame:
         "valence": [],
         "tempo": [],
     }
+
     for song in audio_features:
         feature_dict['song_id'].append(song['id'])
         feature_dict['danceability'].append(song['danceability'])
@@ -79,7 +89,8 @@ def get_song_features(ids: str) -> pd.DataFrame:
     return pd.DataFrame(feature_dict)
 
 
-def get_artist_genres(id):
+def get_artist_genres(id: str) -> pd.DataFrame:
+    """Get artist's genres data """
     sp = access_api()
     artist_json = sp.artist(artist_id=id)
     artist_id = artist_json['id']
@@ -96,14 +107,39 @@ def get_artist_genres(id):
     return pd.DataFrame(genres_dic)
 
 
-def get_artist(ids):
+def get_artists(ids: List(str)) -> pd.DataFrame:
+    """ Get multiple artist data and structure Artist Table
+
+    Args:
+        ids: input artist ID
+    """
     sp = access_api()
-    artist_json = sp.artist(ids)
 
-    return artist_json
+    artists_dict = {
+        'artist_id': [],
+        'artist_name': [],
+        'followers': [],
+        'popularity': [],
+        'external_urls': []
+    }
+
+    for id in ids:
+        artist = sp.artist(id)
+        artists_dict['artist_id'].append(artist['id'])
+        artists_dict['artist_name'].append(artist['name'])
+        artists_dict['followers'].append(artist['followers']['total'])
+        artists_dict['popularity'].append(artist['popularity'])
+        artists_dict['external_urls'].append(artist['external_urls']['spotify'])
+
+    return pd.DataFrame(artists_dict)
 
 
-def get_songs(ids):
+def get_songs(ids: List[str]) -> pd.DataFrame:
+    """ Get multiple songs data and structure Songs Table
+
+    Args:
+        isd: input list of song ID 
+    """
     sp = access_api()
     songs_json = sp.tracks(tracks=ids, market=None) # maximum 50 IDs
     songs_dict = {
@@ -115,6 +151,7 @@ def get_songs(ids):
         'popularity': [],
         'external_urls': []
     }
+
     for song in songs_json['tracks']:
         songs_dict['song_id'].append(song['id'])
         songs_dict['song_name'].append(song['name'])
