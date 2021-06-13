@@ -5,7 +5,7 @@ import datetime
 import numpy as np
 from sqlalchemy import create_engine
 
-from spotify_api import  get_songs, get_recently_played_songs, get_artist, get_song_features
+from spotify_api import  get_songs, get_recently_played_songs, get_artists, get_audio_features
 from secrets import HOST, DATABASE, USER, PASSWORD
 
 
@@ -32,26 +32,9 @@ if __name__ == "__main__":
     # Get songs data
     songs_df = get_songs(song_ids_list)
     # Get songs features data
-    audio_features_df = get_song_features(song_ids_list)
-
-    # Structure Artist table and get artist data
-    artists_dict = {
-        'artist_id': [],
-        'artist_name': [],
-        'followers': [],
-        'popularity': [],
-        'external_urls': []
-    }
-
-    for id in artist_ids_list:
-        artist = get_artist(id)
-        artists_dict['artist_id'].append(artist['id'])
-        artists_dict['artist_name'].append(artist['name'])
-        artists_dict['followers'].append(artist['followers']['total'])
-        artists_dict['popularity'].append(artist['popularity'])
-        artists_dict['external_urls'].append(artist['external_urls']['spotify'])
-
-    artists_df = pd.DataFrame(artists_dict)
+    audio_features_df = get_audio_features(song_ids_list)
+    # Get artists data
+    artists_df = get_artists(artist_ids_list)
     
     print("Data extracted, proceed to Transform stage")
 
