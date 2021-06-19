@@ -6,11 +6,7 @@ __pycache__
 # Editors
 .vscode/
 
-# Windows
-Thumbs.db
 
-# Spotify key / Database config
-ETL/secrets.py
 
 # Notebook
 *.ipynb_checkpoints
