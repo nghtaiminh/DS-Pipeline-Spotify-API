@@ -1,32 +1,45 @@
-DROP TABLE IF EXISTS PlayedSong;
-DROP TABLE IF EXISTS Time;
-DROP TABLE IF EXISTS Artist;
-DROP TABLE IF EXISTS AudioFeature;
-DROP TABLE IF EXISTS Song;
+DROP TABLE IF EXISTS played_song;
+DROP TABLE IF EXISTS song_artists;
+DROP TABLE IF EXISTS time;
+DROP TABLE IF EXISTS artist;
+DROP TABLE IF EXISTS audio_feature;
+DROP TABLE IF EXISTS song;
+DROP TABLE IF EXISTS album;
+
+
 
 -- CREATE TABLES
--- Create Songs Table (Demension Table)
-CREATE TABLE Song (
+CREATE TABLE album (
+	album_id TEXT PRIMARY KEY,
+	album_name TEXT NOT NULL,
+	album_type TEXT NOT NULL,
+	popularity SMALLINT,
+	release_year SMALLINT,
+	external_url TEXT
+);
+
+-- Create Songs Table 
+CREATE TABLE song (
 	song_id TEXT PRIMARY KEY,
 	song_name TEXT NOT NULL,
-	artist_id TEXT NOT NULL,
 	album_id TEXT NOT NULL,
 	duration_ms INTEGER NOT NULL,
 	popularity SMALLINT,
-	external_urls TEXT 
+	external_url TEXT,
+	FOREIGN KEY (album_id) REFERENCES album(album_id)
 );
 
--- Create Artists Table (Demension Table)
-CREATE TABLE Artist (
+-- Create Artists Table 
+CREATE TABLE artist (
 	artist_id TEXT PRIMARY KEY,
 	artist_name TEXT NOT NULL,
 	followers INTEGER,
 	popularity SMALLINT,
-	external_urls TEXT
+	external_url TEXT
 );
 
--- Create Time Table (Demension Table)
-CREATE TABLE Time (
+-- Create Time Table 
+CREATE TABLE time (
 	start_time TIMESTAMP PRIMARY KEY,
 	time TEXT NOT NULL,
 	day SMALLINT NOT NULL,
@@ -35,8 +48,8 @@ CREATE TABLE Time (
 	weekday SMALLINT NOT NULL
 );
 
--- Create AudioFeatures Table (Demension Table)
-CREATE TABLE AudioFeature (
+-- Create AudioFeatures Table 
+CREATE TABLE audio_feature (
 	song_id TEXT PRIMARY KEY,
 	dancibility NUMERIC(4, 3) NOT NULL,
 	energy NUMERIC(7, 3) NOT NULL,
@@ -50,16 +63,22 @@ CREATE TABLE AudioFeature (
 	FOREIGN KEY (song_id) REFERENCES Song(song_id)
 );
 
--- Create PlayedSong Table (Fact Table)
-CREATE TABLE PlayedSong (
-	played_song_id TEXT PRIMARY KEY,
-	song_id TEXT NOT NULL,
-	song_name TEXT NOT NULL,
-	artist_id TEXT NOT NULL,
-	artist_name TEXT NOT NULL,
-	played_at TIMESTAMP NOT NULL,
-	FOREIGN KEY (song_id) REFERENCES Song(song_id),
-	FOREIGN KEY (artist_id) REFERENCES Artist(artist_id),
-	FOREIGN KEY (played_at) REFERENCES Time(start_time)
+
+CREATE TABLE song_artists (
+	song_id TEXT,
+	artist_id TEXT,
+	PRIMARY KEY (song_id, artist_id),
+	FOREIGN KEY (song_id) REFERENCES song(song_id),
+	FOREIGN KEY (artist_id) REFERENCES artist(artist_id)
 );
 
+-- Create PlayedSong Table 
+CREATE TABLE played_song (
+	played_song_id TEXT PRIMARY KEY,
+	song_id TEXT NOT NULL,
+	album_id TEXT NOT NULL,
+	played_at TIMESTAMP NOT NULL,
+	FOREIGN KEY (song_id) REFERENCES song(song_id),
+	FOREIGN KEY (album_id) REFERENCES album(album_id),
+	FOREIGN KEY (played_at) REFERENCES time(start_time)
+);

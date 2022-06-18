@@ -1,13 +1,30 @@
-# ETL, Data Analysis, Song Recommendation with Spotify API
+# Collecting Spotify History Data and Vizualization
 
 ## About the project
 
-In this project, I implement an ETL process to pull my previous listening activities data using Spotify API. Then retrieve the data from the database to explore my music listening taste and habits. Moreover, develop a song recommendation system is also a purpose of this project. 
+In this project, I implement a process to collect personal listening activity data using Spotify API. The data is extracted from Spotify API and loaded into a database. The stored data is then used for visualization to explore listening habits or tastes in music
 
-Progress:
+## Diagrams
 
-- [x] Create database to store the data
-- [x] Implement ETL process
-- [ ] Use Apache Airflow to schedule the ETL process every week
-- [ ] Build a notebook to perform EDA on my music listening data  
-- [ ] Preprocess data and build model for songs recommendation
+1. Proces
+
+![](img/diagram.png)
+
+2. ERD
+
+![](img/ERD.png)
+
+## Demo
+
+![](img/demo.gif)
+
+## Further Improvemments
+
+- Setup Airflow to schedule the extract process daily
+- More complex and interactive visulizations to explore deeper the listening habits and tastse in music
+- Deploy on Streamlit Cloud
+
+## References
+
+- [Spotipy](https://spotipy.readthedocs.io/en/2.19.0/) - Python wrapper for Spotify Web API
+- [Streamlit](https://streamlit.io/) - used for building web app 

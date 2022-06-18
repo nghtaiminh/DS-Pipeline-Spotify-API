@@ -1,0 +1,24 @@
+
+
+label[data-testid="stMetricLabel"] > div { 
+    font-size: 20px; 
+}
+
+div[data-testid="stMetricValue"] > div { 
+    font-size: 50px; 
+}
+
+div[data-testid="stMetricDelta"] > div,svg { 
+    /* text-align: center; */
+    font-size: 15x; 
+}
+
+/* 
+div.css-12w0qpk.e1tzin5v2 {
+    background-color: #EEEEEE;
+    border: 1px solid #DCDCDC;
+    text-align: center;
+    padding: 20px 20px 20px 20px;
+    padding: 2% 2% 2% 4%;
+    border-radius: 10px;
+} */
