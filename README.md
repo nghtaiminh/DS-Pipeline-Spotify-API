@@ -21,7 +21,7 @@ In this project, I implement a process to collect personal listening activity da
 ## Further Improvemments
 
 - Setup Airflow to schedule the extract process daily
-- More complex and interactive visulizations to explore deeper the listening habits and tastse in music
+- More complex and interactive visualizations to explore deeper the listening habits and tastes in music
 - Deploy on Streamlit Cloud
 
 ## References
