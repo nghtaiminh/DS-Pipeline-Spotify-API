@@ -6,7 +6,7 @@ In this project, I implement a process to collect personal listening activity da
 
 ## Diagrams
 
-1. Proces
+1. Overall process
 
 ![](img/diagram.png)
 
