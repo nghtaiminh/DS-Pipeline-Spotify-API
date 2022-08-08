@@ -25,8 +25,8 @@ with DAG(
 ) as dag:
     t1 = PapermillOperator(
         task_id="run_data_extraction_notebook",
-        input_nb="path_to_notebook/SpotifyDataExtraction.ipynb",
-        output_nb="/tmp/out-{{ execution_date }}.ipynb",
+        input_nb="path_to_your_notebook/SpotifyDataExtraction.ipynb",
+        output_nb="path_to_your_temp_folder/tmp/out-{{ execution_date }}.ipynb",
         parameters={"msgs": "Ran from Airflow at {{ execution_date }}!"}
     )
 
