@@ -64,7 +64,7 @@ def get_total_artists(conn):
     return result['total_artists']
 
 def get_plays_per_day(conn):
-    plays_per_day = pd.read_sql("""
+    query = """
         SELECT 
             DATE(dt),
             COALESCE(count_plays, 0) AS count
@@ -77,9 +77,13 @@ def get_plays_per_day(conn):
             WHERE played_at >= DATE_TRUNC('month', CURRENT_DATE - interval '1' MONTH)
             GROUP BY DATE(played_at)
         ) c USING(dt)
-    """, con=conn)
+    """
+    try:
+        result = pd.read_sql_query(query, con=conn)
+    except psycopg2.DatabaseError as e:
+        print(f'Query failed!\n\n{e}')
 
-    return plays_per_day
+    return result
 
 
 def get_song_popularity(conn):
