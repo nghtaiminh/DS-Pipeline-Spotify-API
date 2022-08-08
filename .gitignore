@@ -1,5 +1,6 @@
 # Environments
 spotify-env/
+venv/
 .env
 .cache
 __pycache__
