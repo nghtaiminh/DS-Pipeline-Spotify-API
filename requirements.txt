@@ -1,4 +1,4 @@
-apache-airflow==2.3.3
+apache-airflow==2.3.4
 apache-airflow-providers-papermill==3.0.0
 Markdown==3.3.6
 notebook==6.4.12
